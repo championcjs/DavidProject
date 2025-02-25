@@ -1,0 +1,28 @@
+name: Deploy CloudFormation Stack
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use an Ubuntu environment to run the job
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Checkout the code in the repository
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Set AWS credentials
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Set AWS secret
+          aws-region: us-east-1  # Set the AWS region (adjust as necessary)
+
+      - name: Deploy CloudFormation Stack
+        run: |
+          aws cloudformation deploy \
+            --template-file s3-versioning.yml \
+            --stack-name S3VersioningStack \
+            --capabilities CAPABILITY_NAMED_IAM
