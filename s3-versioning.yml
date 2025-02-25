@@ -5,7 +5,7 @@ Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "my-versioned-bucket-${AWS::730335369007}"
+      BucketName: !Sub "my-versioned-bucket-${AWS::AccountId}"
       VersioningConfiguration:
         Status: Enabled
 
