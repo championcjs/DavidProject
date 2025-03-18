@@ -21,12 +21,12 @@ Parameters:
     Type: String
 
 Resources:
-  S3Bucket: 
-  Type: AWS::S3::Bucket
-  Properties:
-    BucketName: ${BucketName}-${AWS::AccountId}
-    VersioningConfiguration:
-      Status: ${VersioningStatus}
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${BucketName}  # Placeholder for BucketName
+      VersioningConfiguration:
+        Status: ${VersioningStatus}  # Placeholder for VersioningStatus
    
 Outputs:
   BucketName:
