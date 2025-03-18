@@ -25,13 +25,14 @@ jobs:
     - name: Extract parameters from YAML
       id: get_params
       run: |
-        BUCKET_NAME=$(awk '/BucketName:/ {print $2}' s3-versioning.yml) 
-        REGION=$(awk '/Region:/ {print $2}' s3-versioning.yml)
-        VERSIONING=$(awk '/VersioningStatus:/ {print $2}' s3-versioning.yml)
+        BUCKET_NAME=$(yq eval '.Parameters.BucketName.Default' s3-versioning.yml)
+        REGION=$(yq eval '.Parameters.Region.Default' s3-versioning.yml)
+        VERSIONING=$(yq eval '.Parameters.VersioningStatus.Default' s3-versioning.yml)
         
         echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
         echo "REGION=$REGION" >> $GITHUB_ENV
         echo "VERSIONING=$VERSIONING" >> $GITHUB_ENV
+      
 
     - name: Create S3 bucket
       run: |
