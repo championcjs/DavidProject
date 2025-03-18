@@ -1,17 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Creates an S3 bucket with user-defined name, region, and versioning settings.
-
+Outputs:
+  BucketName:
+    Description: Name of the created S3 bucket
+    Value: ${BucketName}
 Parameters:
   BucketName:
-    Default: testbucketv5-fingerscrossed
+    Default: testbucketv6
     Description: Enter the name for the S3 bucket.
     Type: String
-
   Region:
     Default: us-east-1
     Description: Enter the AWS region (e.g., us-east-1, us-west-2).
     Type: String
-
   VersioningStatus:
     AllowedValues:
     - Enabled
@@ -19,16 +20,10 @@ Parameters:
     Default: Suspended
     Description: Enable or disable versioning (Enabled/Disabled).
     Type: String
-
 Resources:
   S3Bucket:
-    Type: AWS::S3::Bucket
     Properties:
-      BucketName: ${BucketName}  # Placeholder for BucketName
+      BucketName: ${BucketName}
       VersioningConfiguration:
-        Status: ${VersioningStatus}  # Placeholder for VersioningStatus
-   
-Outputs:
-  BucketName:
-    Description: "Name of the created S3 bucket"
-    Value: ${BucketName}  # Outputs BucketName as it was inputted
+        Status: ${VersioningStatus}
+    Type: AWS::S3::Bucket
