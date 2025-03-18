@@ -36,8 +36,12 @@ jobs:
 
     - name: Create S3 bucket
       run: |
-        aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION --create-bucket-configuration LocationConstraint=$REGION
-
+        if [ "$REGION" == "us-east-1" ]; then
+          aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION
+        else
+          aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION --create-bucket-configuration LocationConstraint=$REGION
+        fi
+      
     - name: Configure Versioning (if enabled)
       run: |
         if [ "$VERSIONING" == "Enabled" ]; then
