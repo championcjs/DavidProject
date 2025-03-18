@@ -21,11 +21,11 @@ Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${BucketName}-${AWS::AccountId}"
+      BucketName: "${BucketName}-${AWS::AccountId}"
       VersioningConfiguration:
-        Status: !Ref VersioningStatus
+        Status: "${VersioningStatus}"
 
 Outputs:
   BucketName:
     Description: "Name of the created S3 bucket"
-    Value: !Ref S3Bucket
+    Value: "${BucketName}"
