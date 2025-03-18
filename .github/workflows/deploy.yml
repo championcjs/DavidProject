@@ -20,7 +20,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        region: us-east-1  # Default region, will be overridden dynamically
+        aws-region: us-east-1  # Default region, will be overridden dynamically
 
     - name: Extract parameters from YAML
       id: get_params
