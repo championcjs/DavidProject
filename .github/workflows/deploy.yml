@@ -25,7 +25,7 @@ jobs:
     - name: Extract parameters from YAML
       id: get_params
       run: |
-        BUCKET_NAME=$(awk '/BucketName:/ {print $2}' s3-versioning.yml)
+        BUCKET_NAME=$(awk '/BucketName:/ {print $2}' s3-versioning.yml) 
         REGION=$(awk '/Region:/ {print $2}' s3-versioning.yml)
         VERSIONING=$(awk '/VersioningStatus:/ {print $2}' s3-versioning.yml)
         
