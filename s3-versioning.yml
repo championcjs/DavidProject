@@ -1,31 +1,29 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Description: "Creates an S3 bucket with user-defined name, region, and versioning settings."
-
-Parameters:
-  BucketName:
-    Type: String
-    Description: "Enter the name for the S3 bucket."
-    
-  Region:
-    Type: String
-    Description: "Enter the AWS region (e.g., us-east-1, us-west-2)."
-
-  VersioningStatus:
-    Type: String
-    Description: "Enable or disable versioning (Enabled/Disabled)."
-    AllowedValues: 
-      - "Enabled"
-      - "Suspended"
-
-Resources:
-  S3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: "${BucketName}-${AWS::AccountId}"
-      VersioningConfiguration:
-        Status: "${VersioningStatus}"
-
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates an S3 bucket with user-defined name, region, and versioning settings.
 Outputs:
   BucketName:
-    Description: "Name of the created S3 bucket"
-    Value: "${BucketName}"
+    Description: Name of the created S3 bucket
+    Value: ${BucketName}
+Parameters:
+  BucketName:
+    Default: testbucketv2
+    Description: Enter the name for the S3 bucket.
+    Type: String
+  Region:
+    Default: us-east-1
+    Description: Enter the AWS region (e.g., us-east-1, us-west-2).
+    Type: String
+  VersioningStatus:
+    AllowedValues:
+    - Enabled
+    - Suspended
+    Default: Enabled
+    Description: Enable or disable versioning (Enabled/Disabled).
+    Type: String
+Resources:
+  S3Bucket:
+    Properties:
+      BucketName: ${BucketName}-${AWS::AccountId}
+      VersioningConfiguration:
+        Status: ${VersioningStatus}
+    Type: AWS::S3::Bucket
