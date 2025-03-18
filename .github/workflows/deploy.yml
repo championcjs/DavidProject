@@ -33,21 +33,29 @@ jobs:
         echo "REGION=$REGION" >> $GITHUB_ENV
         echo "VERSIONING=$VERSIONING" >> $GITHUB_ENV
       
-
+        - name: Get AWS Account ID
+        id: get_account_id
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
+  
+    - name: Create unique bucket name
+      id: create_unique_bucket_name
+      run: |
+          # Append the AWS Account ID to the original bucket name for uniqueness
+          UNIQUE_BUCKET_NAME="${{ env.BUCKET_NAME }}-${{ env.ACCOUNT_ID }}"
+          echo "UNIQUE_BUCKET_NAME=$UNIQUE_BUCKET_NAME" >> $GITHUB_ENV
+  
     - name: Create S3 bucket
       run: |
-        if [ "$REGION" == "us-east-1" ]; then
-          aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION
-        else
-          aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION --create-bucket-configuration LocationConstraint=$REGION
-        fi
-      
+        aws s3api create-bucket --bucket $UNIQUE_BUCKET_NAME --region $REGION --create-bucket-configuration LocationConstraint=$REGION
+  
     - name: Configure Versioning (if enabled)
       run: |
-        if [ "$VERSIONING" == "Enabled" ]; then
-          aws s3api put-bucket-versioning --bucket $BUCKET_NAME --versioning-configuration Status=Enabled
-        fi
-
+          if [ "$VERSIONING" == "Enabled" ]; then
+            aws s3api put-bucket-versioning --bucket $UNIQUE_BUCKET_NAME --versioning-configuration Status=Enabled
+          fi
+  
     - name: Output S3 bucket details
       run: |
-        aws s3api get-bucket-location --bucket $BUCKET_NAME
+          aws s3api get-bucket-location --bucket $UNIQUE_BUCKET_NAME
