@@ -1,28 +1,48 @@
-name: Deploy CloudFormation Stack
+name: Deploy S3 Bucket based on instructions from s3-versioning.yml
 
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch
+      - main
+    paths:
+      - "s3-versioning.yml" # Workflow triggers only when the s3-versioning.yml file is has a commited change
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Use an Ubuntu environment to run the job
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2  # Checkout the code in the repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Set AWS credentials
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Set AWS secret
-          aws-region: us-east-1  # Set the AWS region (adjust as necessary)
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: us-east-1  # Default region, will be overridden dynamically
 
-      - name: Deploy CloudFormation Stack
-        run: |
-          aws cloudformation deploy \
-            --template-file s3-versioning.yml \
-            --stack-name S3VersioningStack-GitHub-Workflow \
-            --capabilities CAPABILITY_NAMED_IAM
+    - name: Extract parameters from YAML
+      id: get_params
+      run: |
+        BUCKET_NAME=$(awk '/BucketName:/ {print $2}' s3-versioning.yml)
+        REGION=$(awk '/Region:/ {print $2}' s3-versioning.yml)
+        VERSIONING=$(awk '/VersioningStatus:/ {print $2}' s3-versioning.yml)
+        
+        echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+        echo "REGION=$REGION" >> $GITHUB_ENV
+        echo "VERSIONING=$VERSIONING" >> $GITHUB_ENV
+
+    - name: Create S3 bucket
+      run: |
+        aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION --create-bucket-configuration LocationConstraint=$REGION
+
+    - name: Configure Versioning (if enabled)
+      run: |
+        if [ "$VERSIONING" == "Enabled" ]; then
+          aws s3api put-bucket-versioning --bucket $BUCKET_NAME --versioning-configuration Status=Enabled
+        fi
+
+    - name: Output S3 bucket details
+      run: |
+        aws s3api get-bucket-location --bucket $BUCKET_NAME
