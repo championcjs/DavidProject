@@ -77,7 +77,7 @@ print(f"  VersioningStatus Default: {versioning}")
 commit_choice = input("\nWould you like to commit and push these changes to GitHub? (yes/no): ").strip().lower()
 if commit_choice in ["yes", "y"]:
     subprocess.run(["git", "add", template_path])
-    subprocess.run(["git", "commit", "-m", "Update s3-versioning.yml with user inputs"])
+    subprocess.run(["git", "commit", "-m", "Updated s3-versioning.yml with user inputs from s3_setup.py"])
     subprocess.run(["git", "push", "origin", "main"])
     print("Changes have been committed and pushed.")
 else:
