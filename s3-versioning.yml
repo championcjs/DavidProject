@@ -6,18 +6,18 @@ Outputs:
     Value: ${BucketName}
 Parameters:
   BucketName:
-    Default: testbucketv11
+    Default: testbucketv12
     Description: Enter the name for the S3 bucket.
     Type: String
   Region:
-    Default: us-west-2
+    Default: us-east-1
     Description: Enter the AWS region (e.g., us-east-1, us-west-2).
     Type: String
   VersioningStatus:
     AllowedValues:
     - Enabled
     - Suspended
-    Default: Suspended
+    Default: Enabled
     Description: Enable or disable versioning (Enabled/Disabled).
     Type: String
 Resources:
