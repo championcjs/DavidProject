@@ -6,7 +6,7 @@ Outputs:
     Value: ${BucketName}
 Parameters:
   BucketName:
-    Default: testbucketv6
+    Default: testbucketv8
     Description: Enter the name for the S3 bucket.
     Type: String
   Region:
