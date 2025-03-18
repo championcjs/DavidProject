@@ -6,7 +6,7 @@ Outputs:
     Value: ${BucketName}
 Parameters:
   BucketName:
-    Default: testbucketv1-fingerscrossed
+    Default: testbucketv5-fingerscrossed
     Description: Enter the name for the S3 bucket.
     Type: String
   Region:
@@ -17,7 +17,7 @@ Parameters:
     AllowedValues:
     - Enabled
     - Suspended
-    Default: Enabled
+    Default: Suspended
     Description: Enable or disable versioning (Enabled/Disabled).
     Type: String
 Resources:
