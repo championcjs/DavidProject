@@ -33,9 +33,9 @@ jobs:
         echo "REGION=$REGION" >> $GITHUB_ENV
         echo "VERSIONING=$VERSIONING" >> $GITHUB_ENV
       
-        - name: Get AWS Account ID
-        id: get_account_id
-        run: |
+    - name: Get AWS Account ID
+      id: get_account_id
+      run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
           echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
   
